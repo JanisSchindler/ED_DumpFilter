@@ -18,4 +18,4 @@ path is the path to the zip file
 
 ### Example
 
-src/main.py --origin '5000|1000|10000' --maxDistance 2000 systems_1month.json.gz
+py src/main.py --origin '5000|1000|10000' --maxDistance 2000 systems_1month.json.gz
