@@ -9,8 +9,11 @@ usage: src/main.py [-h] [--maxDistance MAXDISTANCE] [--origin ORIGIN] path
 
 where
 --maxDistance is the distance to check for. The default is 1500 LY
+
 --origin is the reference system given by its coordinates in x|y|z. The default is Sol (0|0|0)
+
 path is the path to the zip file
+
 
 Example
 
