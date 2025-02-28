@@ -7,9 +7,11 @@ class FileOutput:
 
   def onAccepted(self, lineBytes):
    self.output.write(b"\n")
+   self.output.write(b"\t")
    self.output.write(lineBytes)
    return
 
   def close(self):
+    self.output.write(b"\n")
     self.output.write(b"]")
     self.output.close()

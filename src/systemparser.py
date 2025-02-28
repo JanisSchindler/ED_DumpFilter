@@ -1,6 +1,5 @@
 from point import Point
 import re
-import orjson
 
 class SystemParser:
 
@@ -28,9 +27,3 @@ class SystemParser:
    
       p = Point.fromCoordinates(x, y, z)    
       return p
-    
-  def cropcolumns(self, line, columns):
-    line = line.strip(" \n\t,")
-    record = orjson.loads(line)
-    cropped = {k: v for k,v in record.items() if k in columns}
-    return orjson.dumps(cropped)
