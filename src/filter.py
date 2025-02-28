@@ -1,4 +1,5 @@
 from systemparser import SystemParser
+import orjson
 
 class Filter:
   def __init__(self):
@@ -6,8 +7,7 @@ class Filter:
                     "population","allegiance","government",
                     "primaryEconomy","secondaryEconomy","security",
                     "controllingPower","powerState"]
-
-  parser = SystemParser()
+    self.parser = SystemParser()
 
   # Calls onAccepted for systems that are within maxDistance of origin
   def filter (self, input, onAccepted, maxDistanceSquared, origin):
@@ -15,20 +15,25 @@ class Filter:
     if (coords == None):
        return
     
-    if (checkSquaredDistance(coords.X, coords.Y, coords.Z, maxDistanceSquared, origin) == False):
+    if (self.checkSquaredDistance(coords, maxDistanceSquared, origin) == False):
         return
     
-    cropped = self.parser.cropcolumns(input, self.columns)  
+    cropped = self.cropcolumns(input)  
     onAccepted(cropped)
     return
+  
+  def cropcolumns(self, line):
+    record = orjson.loads(line.strip(" \n\t,"))
+    cropped = {k: v for k,v in record.items() if k in self.columns}
+    return orjson.dumps(cropped)
 
-def checkSquaredDistance(x,y,z, maxDistanceSquared, origin):
-       # Distance is Sqrt(deltaX ^2 + deltaY ^2 + deltaZ^2)
-       # To prevent the calculation of the square root each time the squared distance is used
-       deltaX = origin.X - x
-       deltaY = origin.Y - y
-       deltaZ = origin.Z - z
-       distanceSquared = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ
-       return distanceSquared < maxDistanceSquared
+  def checkSquaredDistance(self, coords, maxDistanceSquared, origin):
+    # Distance is Sqrt(deltaX ^2 + deltaY ^2 + deltaZ^2)
+    # To prevent the calculation of the square root each time the squared distance is used
+    deltaX = origin.X - coords.X
+    deltaY = origin.Y - coords.Y
+    deltaZ = origin.Z - coords.Z
+    distanceSquared = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ
+    return distanceSquared < maxDistanceSquared
 
     
