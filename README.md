@@ -4,6 +4,7 @@ This command line script takes a zipped systems.*.json.gz from https://www.spans
 
 Requirements
 Python 3.13.2
+orjson
 
 usage: src/main.py [-h] [--maxDistance MAXDISTANCE] [--origin ORIGIN] path
 
