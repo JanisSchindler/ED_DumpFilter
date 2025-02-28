@@ -2,12 +2,14 @@
 class FileOutput: 
   
   def initialize(self, path):
-     self.output = open(path, "w")
-     self.output.write("[" + "\n")
+     self.output = open(path, "wb")
+     self.output.write(b"[")
 
-  def onAccepted(self, line):
-   self.output.write(line + "\n")
+  def onAccepted(self, lineBytes):
+   self.output.write(b"\n")
+   self.output.write(lineBytes)
+   return
 
   def close(self):
-    self.output.write("]")
+    self.output.write(b"]")
     self.output.close()

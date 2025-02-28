@@ -1,16 +1,25 @@
-import systemparser
+from systemparser import SystemParser
 
-# Calls onAccepted for systems that are within maxDistance of origin
-def filter (input, onAccepted, maxDistanceSquared, origin):
+class Filter:
+  def __init__(self):
+    self.columns = ["id64","name","coords",
+                    "population","allegiance","government",
+                    "primaryEconomy","secondaryEconomy","security",
+                    "controllingPower","powerState"]
 
-    coords = systemparser.getcoords(input)
+  parser = SystemParser()
+
+  # Calls onAccepted for systems that are within maxDistance of origin
+  def filter (self, input, onAccepted, maxDistanceSquared, origin):
+    coords = self.parser.getcoords(input)
     if (coords == None):
        return
     
     if (checkSquaredDistance(coords.X, coords.Y, coords.Z, maxDistanceSquared, origin) == False):
         return
-        
-    onAccepted()
+    
+    cropped = self.parser.cropcolumns(input, self.columns)  
+    onAccepted(cropped)
     return
 
 def checkSquaredDistance(x,y,z, maxDistanceSquared, origin):

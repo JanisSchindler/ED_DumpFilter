@@ -1,4 +1,4 @@
-import filter
+from filter import Filter
 import zipreader
 import argparse
 import re
@@ -9,6 +9,7 @@ parsedArgs: vars
 maxDistanceSquared: int
 origin: Point
 output: FileOutput
+filter: Filter
 
 def main():
     # get command line arguments
@@ -27,6 +28,10 @@ def main():
     global origin
     origin = parsedArgs["origin"]
 
+    global filter
+    filter = Filter()
+
+
     global output
     output = FileOutput()
     output.initialize(parsedArgs["path"] + ".filtered.json")
@@ -41,7 +46,7 @@ def main():
     return
 
 def processline(line):    
-  filter.filter(line, lambda: output.onAccepted(line), maxDistanceSquared, parsedArgs["origin"])
+  filter.filter(line, lambda l: output.onAccepted(l), maxDistanceSquared, parsedArgs["origin"])
 
 # Runs the program
 main()

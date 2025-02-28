@@ -1,21 +1,36 @@
 from point import Point
 import re
+import orjson
 
-def getcoords(line):
-    x = 0.0
-    y = 0.0
-    z = 0.0
+class SystemParser:
+
+  def __init__(self):
 
     # Sample line:
     # {"id64":11369639,"name":"CPD-59 2591","mainStar":"O (Blue-White) Star","coords":{"x":7841.34375,"y":-107.78125,"z":2486.96875},"updateTime":"2025-02-25 20:45:07+00"},	
-    # Regex reads numbers that come after "x":, "y": and "z":
-    result = re.findall(r"\"[xyz]\"\:([-+]?\d*\.\d+|\d+)", line)
-    if (len(result) != 3):
-        return None
+    # Regex isolates the coords part "x":7841.34375,"y":-107.78125,"z":2486.96875
+    self.compiled_regex_filter = re.compile(r".*?(\"[xyz]\"\:([-+]?\d*\.\d+|\d+),?){3}")
 
-    x = float(result[0])
-    y = float(result[1])
-    z = float(result[2])
+    # Regex parses the coords and stores the numbers in the result list
+    self.compiled_regex_coords = re.compile(r"\"[xyz]\"\:([-+]?\d*\.\d+|\d+)")
+
+  def getcoords(self, line):
+    match = self.compiled_regex_filter.match(line)
+    if match:
+      content = match.group()
+      result =  self.compiled_regex_coords.findall(content)
+      if (len(result) != 3):
+        return None
+      
+      x = float(result[0])
+      y = float(result[1])
+      z = float(result[2])
    
-    p = Point.fromCoordinates(x, y, z)    
-    return p
+      p = Point.fromCoordinates(x, y, z)    
+      return p
+    
+  def cropcolumns(self, line, columns):
+    line = line.strip(" \n\t,")
+    record = orjson.loads(line)
+    cropped = {k: v for k,v in record.items() if k in columns}
+    return orjson.dumps(cropped)
