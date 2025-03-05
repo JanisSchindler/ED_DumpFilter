@@ -2,11 +2,8 @@ from systemparser import SystemParser
 import orjson
 
 class Filter:
-  def __init__(self):
-    self.columns = ["id64","name","coords",
-                    "population","allegiance","government",
-                    "primaryEconomy","secondaryEconomy","security",
-                    "controllingPower","powerState"]
+  def __init__(self, columns):
+    self.columns = columns
     self.parser = SystemParser()
 
   # Calls onAccepted for systems that are within maxDistance of origin
@@ -35,5 +32,3 @@ class Filter:
     deltaZ = origin.Z - coords.Z
     distanceSquared = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ
     return distanceSquared < maxDistanceSquared
-
-    
