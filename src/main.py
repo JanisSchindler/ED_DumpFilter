@@ -13,11 +13,13 @@ filter: Filter
 
 def main():
     # get command line arguments
+    defaultColumns = "id64, name, coords, population, allegiance, government, primaryEconomy, secondaryEconomy, security, controllingPower, powerState"
+    
     parser = argparse.ArgumentParser()
     parser.add_argument("path", help="path to the file")
     parser.add_argument("--maxDistance", help="The maximum distance from origin", type=int, default=1500)
     parser.add_argument("--origin", help="The origin coordinates in x|y|z", type=Point.fromArgument, default="0|0|0")
-    
+    parser.add_argument('--columns', help="Add columns to select, separated by a comma (e.g. 'id64, name, coords')", type=str, default=defaultColumns)
     # initialize global variables
     global parsedArgs
     parsedArgs = vars(parser.parse_args())
@@ -28,16 +30,14 @@ def main():
     global origin
     origin = parsedArgs["origin"]
 
+    columns = parsedArgs["columns"].split(',')
+    columns = [c.strip() for c in columns]
     global filter
-    filter = Filter()
-
+    filter = Filter(columns)
 
     global output
     output = FileOutput()
     output.initialize(parsedArgs["path"] + ".filtered.json")
-
-    # print (parsedArgs)
-    # print ("origin:" + f'{origin.X}' + "|" + f'{origin.Y}' + "|" + f'{origin.Z}')
 
     # process the file
     zipreader.streamzip(parsedArgs["path"], processline)

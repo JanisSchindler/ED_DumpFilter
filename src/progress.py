@@ -1,3 +1,5 @@
+# ---- Currently not used ----
+
 import sys
 
 # Prints the current progress to the output
