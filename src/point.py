@@ -22,5 +22,5 @@ class Point:
     x = float(elements[0])
     y = float(elements[1])
     z = float(elements[2])
-    return cls(x, z, y)
+    return cls(x, y, z)
 
