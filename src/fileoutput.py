@@ -6,6 +6,7 @@ class FileOutput:
      self.output.write(b"[")
 
   def onAccepted(self, lineBytes):
+   self.output.write(b",")
    self.output.write(b"\n")
    self.output.write(b"\t")
    self.output.write(lineBytes)
